@@ -22,10 +22,26 @@ public class PagesControllerTest {
     private MockMvc mvc;
 
     @Test
-    public void testIndexEndpoint() throws Exception {
-        this.mvc.perform(get("/pages").accept(MediaType.TEXT_PLAIN))
+    public void testGetPagesByCustomObjectEndpoint() throws Exception {
+        this.mvc.perform(get("/pages/customObject?filter=new").accept(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk())
-                .andExpect(content().string("GET to pages route"));
+                .andExpect(content().string("GET to pages route. Filter is: new"));
+
+    }
+
+    @Test
+    public void testGetPagesByIndividualNameEndpoint() throws Exception {
+        this.mvc.perform(get("/pages/individualName?filter=new").accept(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk())
+                .andExpect(content().string("GET to pages route. Filter is: new"));
+
+    }
+
+    @Test
+    public void testGetPagesByHashMapEndpoint() throws Exception {
+        this.mvc.perform(get("/pages/hashMap?filter=new").accept(MediaType.TEXT_PLAIN))
+                .andExpect(status().isOk())
+                .andExpect(content().string("GET to pages route. Filter is: new"));
 
     }
 
