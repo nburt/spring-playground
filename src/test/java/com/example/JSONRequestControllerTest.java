@@ -18,6 +18,8 @@ import java.nio.file.Paths;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(JSONRequestController.class)
@@ -97,6 +99,26 @@ public class JSONRequestControllerTest {
     private String getJSON(String path) throws Exception {
         URL url = this.getClass().getResource(path);
         return new String(Files.readAllBytes(Paths.get(url.getFile())));
+    }
+
+    @Test
+    public void testJsonResponse() throws Exception {
+        PersonParams person = new PersonParams(1, "John");
+        PeopleParams people = new PeopleParams(new PersonParams[] {person});
+        DataObjectParams data = new DataObjectParams(people);
+
+        Gson gson = new GsonBuilder().create();
+
+        String json = gson.toJson(data);
+
+        MockHttpServletRequestBuilder request = post("/jr/peopleResponse")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].name", is("John")));
     }
 
 }

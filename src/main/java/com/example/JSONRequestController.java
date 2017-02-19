@@ -10,8 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class JSONRequestController {
 
     @PostMapping("/people")
-    public String createPeopleFileFixture(@RequestBody DataObject data) {
+    public String createPeople(@RequestBody DataObject data) {
         return String.format("Id: %d, Name: %s",  data.getData().getPeople()[0].getId(), data.getData().getPeople()[0].getName());
+    }
+
+    @PostMapping("peopleResponse")
+    public Person[] createPeopleWithResponse(@RequestBody DataObject data) {
+        return data.getData().getPeople();
     }
 
 }
